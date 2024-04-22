@@ -19,10 +19,10 @@ import "google/protobuf/timestamp.proto";
 service {{ ProjectName }} {
 {%- for entity_key in model.entities -%}
 {%- set entity = model.entities[entity_key] %}
-    rpc Create{{ entity["EntityName"]}} (Create{{ entity["EntityName"]}}Request) returns ({{ entity["EntityName"]}})
-    rpc Get{{ entity["EntityName"]}} (Get{{ entity["EntityName"]}}Request) returns ({{ entity["EntityName"]}})
-    rpc Get{{ entity["EntityName"] | pluralize }} (Get{{ entity["EntityName"] | pluralize }}Request) returns (Get{{ entity["EntityName"] | pluralize }}Response)
-    rpc Update{{ entity["EntityName"]}} (Update{{ entity["EntityName"]}}Request) returns ({{ entity["EntityName"]}})
+    rpc Create{{ entity["EntityName"]}} (Create{{ entity["EntityName"]}}Request) returns ({{ entity["EntityName"]}});
+    rpc Get{{ entity["EntityName"]}} (Get{{ entity["EntityName"]}}Request) returns ({{ entity["EntityName"]}});
+    rpc Get{{ entity["EntityName"] | pluralize }} (Get{{ entity["EntityName"] | pluralize }}Request) returns (Get{{ entity["EntityName"] | pluralize }}Response);
+    rpc Update{{ entity["EntityName"]}} (Update{{ entity["EntityName"]}}Request) returns ({{ entity["EntityName"]}});
 
 {% endfor %}}
 
