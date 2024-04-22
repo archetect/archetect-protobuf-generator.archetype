@@ -1,0 +1,86 @@
+{% import "macros/protobuf" as protobuf -%}
+syntax = "proto3";
+
+{% if java_package -%}
+option java_multiple_files = true;
+option java_package = "{{ java_package }}";
+option java_outer_classname = "{{ ProjectPrefix }}Stubs";
+{%- endif %}
+
+{%- if go_package %}
+option go_package = "github.com/example/path/gen;gen";
+{%- endif %}
+
+package {{ project_name }};
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+
+service {{ ProjectName }} {
+{%- for entity_key in model.entities -%}
+{%- set entity = model.entities[entity_key] %}
+    rpc Create{{ entity["EntityName"]}} (Create{{ entity["EntityName"]}}Request) returns ({{ entity["EntityName"]}})
+    rpc Get{{ entity["EntityName"]}} (Get{{ entity["EntityName"]}}Request) returns ({{ entity["EntityName"]}})
+    rpc Get{{ entity["EntityName"] | pluralize }} (Get{{ entity["EntityName"] | pluralize }}Request) returns (Get{{ entity["EntityName"] | pluralize }}Response)
+    rpc Update{{ entity["EntityName"]}} (Update{{ entity["EntityName"]}}Request) returns ({{ entity["EntityName"]}})
+
+{% endfor %}}
+
+{% for entity_key in model.entities -%}
+{%- set entity = model.entities[entity_key] %}
+
+// Create {{ entity["entity-title"] }} Request
+message Create{{ entity["EntityName"]}}Request {
+    // {{ entity["entity-title"] }}
+    {{ entity["EntityName"]}} {{ entity["entity_name"]}} = 1;
+}
+
+// Get {{ entity["entity-title"] }} Request
+message Get{{ entity["EntityName"]}}Request {
+    // {{ entity["entity-title"] }} Id
+    string id = 1;
+}
+
+// Get {{ entity["entity-title"] | pluralize }} Request
+message Get{{ entity["entity-title"] | pluralize }}Request {
+    // Start Page
+    int32 start_page = 1;
+    // Page Size
+    int32 page_size = 2;
+}
+
+message Get{{ entity["EntityName"] | pluralize }}Response {
+    // {{ entity["EntityName"] | pluralize }}
+    repeated {{ entity["EntityName"] }} {{ entity["entity_name"] | pluralize }} = 1;
+    // Has Next Page
+    bool has_next = 2;
+    // Has Previous Page
+    bool has_previous = 3;
+    // Next Page Id
+    int32 next_page = 4;
+    // Previous Page Id
+    int32 previous_page = 5;
+    // Total Pages
+    int32 total_pages = 6;
+    // Total {{ entity["EntityName"] | pluralize }}
+    int64 total_elements = 7;
+}
+
+// Update {{ entity["entity-title"] }} Request
+message Update{{ entity["EntityName"]}}Request {
+    // {{ entity["entity-title"] }}
+    {{ entity["EntityName"]}} {{ entity["entity_name"]}} = 1;
+}
+
+
+// {{ entity["entity-title"] }}
+message {{ entity["EntityName"] }} {
+    // {{ entity["entity-title"] }} Id
+    google.protobuf.StringValue id = 1;
+{%- for field_key in entity.fields -%}
+{%- set field = entity.fields[field_key] -%}
+    {{ protobuf.field(field, loop.index + 1, model) }}
+{%- endfor %}
+}
+{% endfor %}
+

@@ -1,0 +1,37 @@
+
+{%- macro type_field(field, model) -%}
+{%- if field["type"] == "String" %}{% if field["optional"] %}google.protobuf.StringValue{% else %}string{% endif %}
+{%- elif field["type"] == "Int" %}{% if field["optional"] %}google.protobuf.Int32Value{% else %}int32{% endif %}
+{%- elif field["type"] == "Int32" %}{% if field["optional"] %}google.protobuf.Int32Value{% else %}int32{% endif %}
+{%- elif field["type"] == "Long" %}{% if field["optional"] %}google.protobuf.Int64Value{% else %}int64{% endif %}
+{%- elif field["type"] == "Int64" %}{% if field["optional"] %}google.protobuf.Int64Value{% else %}int64{% endif %}
+{%- elif field["type"] == "Bool" %}{% if field["optional"] %}google.protobuf.BoolValue{% else %}bool{% endif %}
+{%- elif field["type"] == "Boolean" %}{% if field["optional"] %}google.protobuf.BoolValue{% else %}bool{% endif %}
+{%- elif field["type"] == "Double" %}{% if field["optional"] %}google.protobuf.DoubleValue{% else %}double{% endif %}
+{%- elif field["type"] == "Float" %}{% if field["optional"] %}google.protobuf.FloatValue{% else %}float{% endif %}
+{%- elif field["type"] == "Bytes" %}{% if field["optional"] %}google.protobuf.BytesValue{% else %}bytes{% endif %}
+{%- elif field["type"] == "DateTime" -%}google.protobuf.Timestamp
+{%- else %}{{ field["type"] }}
+{%- endif -%}
+{%- endmacro -%}
+
+{%- macro ref_field(field, model) -%}
+{%- set ref = model.entities[field.ref.entity] -%}
+{{ ref["EntityName"] }}
+{%- endmacro -%}
+
+{%- macro field_type(field, model) -%}
+{%- if field["type"] -%}{{ type_field(field, model) }}
+{%- elif field["ref"] -%}{{ ref_field(field, model) }}
+{%- else -%}INVALID_TYPE_OR_REF
+{%- endif -%}
+{% endmacro -%}
+
+{%- macro field_comment(field, model) -%}
+{{ field.name | title_case }}
+{%- endmacro -%}
+
+{%- macro field(field, id, model) %}
+    // {{ field_comment(field, model) }}
+    {% if field.repeated %}repeated {% endif %}{{ field_type(field, model) }} {{ field["field_name"] }} = {{ id }};
+{%- endmacro -%}
