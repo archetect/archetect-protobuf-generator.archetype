@@ -26,6 +26,10 @@ service {{ ProjectName }} {
 
 {% endfor %}}
 
+message Id {
+    string value = 1;
+}
+
 {% for entity_key in model.entities -%}
 {%- set entity = model.entities[entity_key] %}
 
@@ -38,7 +42,7 @@ message Create{{ entity["EntityName"]}}Request {
 // Get {{ entity["entity-title"] }} Request
 message Get{{ entity["EntityName"]}}Request {
     // {{ entity["entity-title"] }} Id
-    string id = 1;
+    Id id = 1;
 }
 
 // Get {{ entity["entity-title"] | pluralize }} Request
@@ -76,7 +80,7 @@ message Update{{ entity["EntityName"]}}Request {
 // {{ entity["entity-title"] }}
 message {{ entity["EntityName"] }} {
     // {{ entity["entity-title"] }} Id
-    google.protobuf.StringValue id = 1;
+    Id id = 1;
 {%- for field_key in entity.fields -%}
 {%- set field = entity.fields[field_key] -%}
     {{ protobuf.field(field, loop.index + 1, model) }}
