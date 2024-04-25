@@ -1,13 +1,15 @@
 {% import "macros/protobuf" as protobuf -%}
 syntax = "proto3";
 
-{% if java_package -%}
+{%- if java_package %}
+
 option java_multiple_files = true;
 option java_package = "{{ java_package }}";
 option java_outer_classname = "{{ ProjectPrefix }}Stubs";
 {%- endif %}
 
 {%- if go_package %}
+
 option go_package = "github.com/example/path/gen;gen";
 {%- endif %}
 
@@ -24,7 +26,8 @@ service {{ ProjectName }} {
     rpc Get{{ entity["EntityName"] | pluralize }} (Get{{ entity["EntityName"] | pluralize }}Request) returns (Get{{ entity["EntityName"] | pluralize }}Response);
     rpc Update{{ entity["EntityName"]}} (Update{{ entity["EntityName"]}}Request) returns ({{ entity["EntityName"]}});
 
-{% endfor %}}
+{%- endfor %}
+}
 
 message Id {
     string value = 1;
@@ -47,27 +50,29 @@ message Get{{ entity["EntityName"]}}Request {
 
 // Get {{ entity["entity-title"] | pluralize }} Request
 message Get{{ entity["entity-title"] | pluralize }}Request {
-    // Start Page
-    int32 start_page = 1;
+    // Page Index
+    uint32 page_index = 1;
     // Page Size
-    int32 page_size = 2;
+    uint32 page_size = 2;
 }
 
 message Get{{ entity["EntityName"] | pluralize }}Response {
-    // {{ entity["EntityName"] | pluralize }}
-    repeated {{ entity["EntityName"] }} {{ entity["entity_name"] | pluralize }} = 1;
+    // {{ entity["EntityName"] }} Records
+    repeated {{ entity["EntityName"] }} records = 1;
+    // Current Page Index
+    uint32 index = 2;
+    // Next Page Index
+    uint32 next = 4;
     // Has Next Page
-    bool has_next = 2;
+    bool has_next = 3;
+    // Previous Page Index
+    uint32 previous = 6;
     // Has Previous Page
-    bool has_previous = 3;
-    // Next Page Id
-    int32 next_page = 4;
-    // Previous Page Id
-    int32 previous_page = 5;
+    bool has_previous = 5;
     // Total Pages
-    int32 total_pages = 6;
-    // Total {{ entity["EntityName"] | pluralize }}
-    int64 total_elements = 7;
+    uint32 total = 7;
+    // Total {{ entity["EntityName"] }} Records
+    uint64 total_records = 8;
 }
 
 // Update {{ entity["entity-title"] }} Request
@@ -75,7 +80,6 @@ message Update{{ entity["EntityName"]}}Request {
     // {{ entity["entity-title"] }}
     {{ entity["EntityName"]}} {{ entity["entity_name"]}} = 1;
 }
-
 
 // {{ entity["entity-title"] }}
 message {{ entity["EntityName"] }} {

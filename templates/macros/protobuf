@@ -1,15 +1,19 @@
 
 {%- macro type_field(field, model) -%}
-{%- if field["type"] == "String" %}{% if field["optional"] %}google.protobuf.StringValue{% else %}string{% endif %}
-{%- elif field["type"] == "Int" %}{% if field["optional"] %}google.protobuf.Int32Value{% else %}int32{% endif %}
-{%- elif field["type"] == "Int32" %}{% if field["optional"] %}google.protobuf.Int32Value{% else %}int32{% endif %}
-{%- elif field["type"] == "Long" %}{% if field["optional"] %}google.protobuf.Int64Value{% else %}int64{% endif %}
-{%- elif field["type"] == "Int64" %}{% if field["optional"] %}google.protobuf.Int64Value{% else %}int64{% endif %}
-{%- elif field["type"] == "Bool" %}{% if field["optional"] %}google.protobuf.BoolValue{% else %}bool{% endif %}
-{%- elif field["type"] == "Boolean" %}{% if field["optional"] %}google.protobuf.BoolValue{% else %}bool{% endif %}
-{%- elif field["type"] == "Double" %}{% if field["optional"] %}google.protobuf.DoubleValue{% else %}double{% endif %}
-{%- elif field["type"] == "Float" %}{% if field["optional"] %}google.protobuf.FloatValue{% else %}float{% endif %}
-{%- elif field["type"] == "Bytes" %}{% if field["optional"] %}google.protobuf.BytesValue{% else %}bytes{% endif %}
+{%- if field["type"] == "String" %}{% if field["optional"] %}optional {% endif %}string
+{%- elif field["type"] == "Int" %}{% if field["optional"] %}optional {% endif %}int32
+{%- elif field["type"] == "I32" %}{% if field["optional"] %}optional {% endif %}int32
+{%- elif field["type"] == "U32" %}{% if field["optional"] %}optional {% endif %}uint32
+{%- elif field["type"] == "Long" %}{% if field["optional"] %}optional {% endif %}int64
+{%- elif field["type"] == "I64" %}{% if field["optional"] %}optional {% endif %}int64
+{%- elif field["type"] == "U64" %}{% if field["optional"] %}optional {% endif %}int64
+{%- elif field["type"] == "Bool" %}{% if field["optional"] %}optional {% endif %}bool
+{%- elif field["type"] == "Boolean" %}{% if field["optional"] %}optional {% endif %}bool
+{%- elif field["type"] == "Float" %}{% if field["optional"] %}optional {% endif %}float
+{%- elif field["type"] == "F32" %}{% if field["optional"] %}optional {% endif %}float
+{%- elif field["type"] == "Double" %}{% if field["optional"] %}optional {% endif %}double
+{%- elif field["type"] == "F64" %}{% if field["optional"] %}optional {% endif %}double
+{%- elif field["type"] == "Bytes" %}{% if field["optional"] %}optional {% endif %}bytes
 {%- elif field["type"] == "DateTime" -%}google.protobuf.Timestamp
 {%- else %}{{ field["type"] }}
 {%- endif -%}
